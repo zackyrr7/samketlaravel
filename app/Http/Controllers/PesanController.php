@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PesanController extends Controller
 {
-    public function index ()
+    public function index()
     {
         return Pesan::all();
     }
@@ -17,16 +17,16 @@ class PesanController extends Controller
     public function store(Request $request)
     {
         try {
-            $imageName = Str::random(32) . "." . $request->foto->getClientOriginalExtension();
+            $file = $request->file('foto');
+            $filename = time() . '-' . $file->getClientOriginalName();
+            $request->foto->move(public_path('storage'), $filename);
             Pesan::create([
                 'users_id' => $request->users_id,
                 'tanggal' => $request->tanggal,
                 'alamat' => $request->alamat,
-                'foto' => $imageName
+                'foto' => $filename
             ]);
-            Storage::disk('public')->put($imageName, file_get_contents($request->foto));
-            $url = Storage::url("/storage/app/{$imageName}");
-            $path = public_path($url);
+
 
             //Json Response
             return response()->json([
@@ -57,29 +57,29 @@ class PesanController extends Controller
     public function update(Request $request, $id)
     {
         //pesan detail
-        try{
+        try {
             //menemukan pesan
             $pesan = Pesan::find($id);
-            if(!$pesan){
+            if (!$pesan) {
                 return response()->json([
                     'message' => 'Pesanan tidak ditemukan'
-                ],404);
+                ], 404);
             }
 
             $pesan->users_id = $request->users_id;
-            $pesan->tanggal= $request->tanggal;
+            $pesan->tanggal = $request->tanggal;
             $pesan->alamat = $request->alamat;
-            
 
-            if ($request->foto){
+
+            if ($request->foto) {
                 $storage = Storage::disk('public');
 
                 //hapus foto lama
                 if ($storage->exists($pesan->foto))
-                $storage->delete($pesan->foto);
+                    $storage->delete($pesan->foto);
 
                 //nama foto
-                $imageName = Str::random(32).".".$request->foto->getClientOriginalExtension();
+                $imageName = Str::random(32) . "." . $request->foto->getClientOriginalExtension();
                 $pesan->foto = $imageName;
 
                 //save foto
@@ -91,31 +91,29 @@ class PesanController extends Controller
             //respon json
             return response()->json([
                 'message' => 'Pesan berhasil diupdate'
-            ],200);
-
-        }catch(\Exception $e){
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => "Something went really wrong"
             ]);
         }
-      
     }
 
     public function destroy($id)
     {
         $pesan = Pesan::find($id);
-        if(!$pesan) {
+        if (!$pesan) {
             return response()->json([
                 'message' => "Pesan tidak Ditemukan"
-            ],404);
+            ], 404);
         }
 
         //hapus storage
         $storage = Storage::disk('public');
 
         //hapus gambar
-        if($storage->exists($pesan->foto))
-        $storage->delete($pesan->foto);
+        if ($storage->exists($pesan->foto))
+            $storage->delete($pesan->foto);
 
         //delete pesan
         $pesan->delete();
@@ -124,5 +122,4 @@ class PesanController extends Controller
             'message' => "Pesan berhasil di hapus"
         ]);
     }
-
 }

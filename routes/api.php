@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JenisTransaksiController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PesanController;
+use App\Http\Controllers\TabunganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //auth
+Route::get('/user/all',[AuthController::class, 'index']);
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
 Route::post('/changerole',[AuthController::class, 'changeRole']);
@@ -57,9 +59,11 @@ Route::post('/jenis-transaksi', [JenisTransaksiController::class, 'store']);
 //transaksi
 Route::get('/transaksi', [TransaksiController::class, 'index']);
 Route::get('/transaksi/{id}', [TransaksiController::class, 'show']);
+Route::get('/transaksi/user/{id}', [TransaksiController::class, 'indexuser']);
 Route::post('/transaksi/delete/{id}', [TransaksiController::class, 'destroy']);
 Route::post('/transaksi/update/{id}', [TransaksiController::class, 'update']);
-Route::post('/transaksisedekah', [TransaksiController::class, 'storeSedekah']);
+Route::post('/transaksi', [TransaksiController::class, 'store']);
+Route::post('/transaksi/selesai/{id}', [TransaksiController::class, 'selesai']);
 
 
 //pesan
@@ -68,3 +72,10 @@ Route::get('/pesan/{id}', [PesanController::class, 'show']);
 Route::post('/pesan/delete/{id}', [PesanController::class, 'destroy']);
 Route::post('/pesan/update/{id}', [PesanController::class, 'update']);
 Route::post('/pesan', [PesanController::class, 'store']);
+
+
+Route::get('/tabungan', [TabunganController::class, 'index']);
+Route::post('/tabungan', [TabunganController::class, 'store']);
+Route::get('/tabungan/user/{id}', [TabunganController::class, 'indexuser']);
+Route::get('/tabungan/total/{id}', [TabunganController::class, 'total']);
+Route::post('/tabungan/delete/{id}', [TabunganController::class, 'destroy']);

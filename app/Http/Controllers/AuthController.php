@@ -8,9 +8,16 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+
 
 class AuthController extends Controller
 {
+
+    public function index()
+    {
+        return User::all();
+    }
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -31,16 +38,19 @@ class AuthController extends Controller
         $input['password'] = bcrypt($input['password']);
         $input['role'] = 'user';
         $user = User::create($input);
-      
-      
+
+
 
         $succes['token'] = $user->createToken('auth_token')->plainTextToken;
         $succes['name'] = $user->name;
         $succes['id'] = $user->id;
 
         $tabungan  = new Tabungan();
-        $tabungan->nama = $succes['name'];
+
         $tabungan->users_id = $succes['id'];
+        $tabungan->saldo = 0;
+        $tabungan->status = 'Akun Dibuat';
+        $tabungan->tanggal = Carbon::now();
         $tabungan->save();
 
         return response()->json([

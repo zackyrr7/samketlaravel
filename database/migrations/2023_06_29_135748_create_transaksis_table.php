@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('jenistransaksis_id');
-            $table->foreign('jenistransaksis_id')->references('id')->on('jenis_transaksis')->onDelete('cascade');
+            $table->unsignedBigInteger('jenis_transaksis_id');
+            $table->foreign('jenis_transaksis_id')->references('id')->on('jenis_transaksis')->onDelete('cascade');
+            $table->unsignedBigInteger('users_id');
+            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->date('tanggal');
             $table->decimal('total',9,3);
             $table->string('nomor');
             $table->string('jenis');
+            $table->string('status');
             $table->timestamps();
         });
     }

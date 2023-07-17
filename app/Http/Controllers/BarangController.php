@@ -17,15 +17,15 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         try {
-            $imageName = Str::random(32) . "." . $request->foto->getClientOriginalExtension();
+            $file = $request->file('foto');
+            $filename = Str::random(32).".".$file->getClientOriginalExtension();
+            $request->foto->move(public_path('storage'), $filename);
             Barang::create([
                 'nama' => $request->nama,
                 'harga' => $request->harga,
-                'foto' => $imageName
+                'foto' => $filename
             ]);
-            Storage::disk('public')->put($imageName, file_get_contents($request->foto));
-            $url = Storage::url("/storage/app/{$imageName}");
-            $path = public_path($url);
+            
 
             //Json Response
             return response()->json([
@@ -78,11 +78,11 @@ class BarangController extends Controller
                 $storage->delete($barang->foto);
 
                 //nama foto
-                $imageName = Str::random(32).".".$request->foto->getClientOriginalExtension();
-                $barang->foto = $imageName;
+                $filename = Str::random(32).".".$request->foto->getClientOriginalExtension();
+                $barang->foto = $filename;
 
                 //save foto
-                $storage->put($imageName, file_get_contents($request->foto));
+                $storage->put($filename, file_get_contents($request->foto));
             }
             //update barang
             $barang->save();

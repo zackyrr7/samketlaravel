@@ -9,15 +9,16 @@ class Tabungan extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nama',
         'users_id',
+        'saldo',
+        'status',
+        'tanggal'
+        
+        
     ];
 
 
-    public function jenistransaksis()
-    {
-        return $this->hasMany(JenisTransaksi::class, 'tabungans_id', 'id');
-    }
+    
     public function user()
     {
         return $this->belongsTo(User::class);
