@@ -31,9 +31,9 @@ class TransaksiController extends Controller
 
             //
             $tabungan = Tabungan::where('users_id', $request->users_id)->get();
-            $transaksi = Transaksi::where('users_id', $request->users_id)->get();
+            $transaksi2 = Transaksi::where('users_id', $request->users_id)->get();
             $totaltransaksi = 0;
-            foreach ($transaksi as $trs) {
+            foreach ($transaksi2 as $trs) {
                 $totaltransaksi += $trs->total;
             }
             $totaltabungan = 0;
@@ -41,7 +41,8 @@ class TransaksiController extends Controller
                 $totaltabungan += $tbg->saldo;
             }
             if ($totaltabungan < $totaltransaksi + $request->total) {
-
+                $transaksi = Transaksi::find($transaksi->id);
+                $transaksi->delete();
                 return response()->json([
                     'status' => "201",
                     'message' => "Transaksi gagal",

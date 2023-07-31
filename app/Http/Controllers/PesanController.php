@@ -18,13 +18,22 @@ class PesanController extends Controller
     {
         try {
             $file = $request->file('foto');
-            $filename = time() . '-' . $file->getClientOriginalName();
-            $request->foto->move(public_path('storage'), $filename);
+            $filename1 = time() . '-' . $file->getClientOriginalName();
+            $request->foto->move(public_path('storage'), $filename1);
+            $file = $request->file('foto2');
+            $filename2 = time() . '-' . $file->getClientOriginalName();
+            $request->foto2->move(public_path('storage'), $filename2);
+            $file = $request->file('foto3');
+            $filename3 = time() . '-' . $file->getClientOriginalName();
+            $request->foto3->move(public_path('storage'), $filename3);
             Pesan::create([
                 'users_id' => $request->users_id,
                 'tanggal' => $request->tanggal,
                 'alamat' => $request->alamat,
-                'foto' => $filename
+                'foto' => $filename1,
+                'foto2' => $filename2,
+                'foto3' => $filename3,
+                'jenis' => $request->jenis
             ]);
 
 
@@ -113,8 +122,8 @@ class PesanController extends Controller
 
         //hapus gambar
         if ($storage->exists($pesan->foto))
-            $storage->delete($pesan->foto);
-
+            $storage->delete($pesan->foto, $pesan->foto2, $pesan->foto3);
+           
         //delete pesan
         $pesan->delete();
 
@@ -122,4 +131,6 @@ class PesanController extends Controller
             'message' => "Pesan berhasil di hapus"
         ]);
     }
+
+    
 }
