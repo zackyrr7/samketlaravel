@@ -40,10 +40,12 @@ class TransaksiController extends Controller
             foreach ($tabungan as $tbg) {
                 $totaltabungan += $tbg->saldo;
             }
-            if ($totaltabungan < $totaltransaksi + $request->total) {
+            if ($totaltabungan   <  $totaltransaksi) {
                 $transaksi = Transaksi::find($transaksi->id);
                 $transaksi->delete();
                 return response()->json([
+                    'total_transaksi' => $totaltransaksi,
+                    'total_tabungan' =>$totaltabungan,
                     'status' => "201",
                     'message' => "Transaksi gagal",
                     'message2' => "Saldo tidak cukup"

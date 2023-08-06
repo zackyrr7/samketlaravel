@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('users_id');
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->date('tanggal');
-            $table->decimal('total',9,3);
+            $table->integer('total');
             $table->string('nomor');
             $table->string('jenis');
             $table->string('status');

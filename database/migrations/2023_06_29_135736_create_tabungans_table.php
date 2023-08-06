@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('users_id');
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
-            $table->decimal('saldo',9,3);
+            $table->integer('saldo');
             $table->date('tanggal');
             $table->string('status');
             $table->timestamps();
