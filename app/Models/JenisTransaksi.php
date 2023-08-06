@@ -20,4 +20,6 @@ class JenisTransaksi extends Model
     {
         return $this->hasMany(Transaksi::class, 'jenistransaksis_id', 'id');
     }
+
+   
 }

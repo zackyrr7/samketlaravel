@@ -95,7 +95,15 @@ class TransaksiController extends Controller
     {
         try {
             $user = User::find($id);
-            return $transaksi = Transaksi::where('users_id', $id)->get();
+              
+            //     $transaksi = Transaksi::where('users_id', $id)->get();
+            //    $transaksi = Transaksi::with('jenistransaksi')->get()->jenistransaksi->nama;
+            $transaksi = Transaksi::with('jenistransaksi')->where('users_id', $id)->get();
+              
+            //    $transaksi = Transaksi::with('jenis_transaksis')->whereRelation('jenis_transaksis', $id)->get();
+
+
+             return $transaksi;
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 201,

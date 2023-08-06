@@ -18,6 +18,11 @@ class AuthController extends Controller
     {
         return User::all();
     }
+
+    public function indexUser($id)
+    {
+        return User::find($id);
+    }
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
