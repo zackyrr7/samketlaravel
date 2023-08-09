@@ -76,6 +76,7 @@ class AuthController extends Controller
             // $succes['id'] = $auth->id;
 
             $nama = $auth->name;
+            $no_hp = $auth->no_hp;
             $id = $auth->id;
             $token = $auth->createToken('auth_token')->plainTextToken;
 
@@ -86,6 +87,7 @@ class AuthController extends Controller
                 'nama' => $nama,
                 'id' => $id,
                 'token' => $token,
+                'no_hp' => $no_hp
 
             ]);
         } else {

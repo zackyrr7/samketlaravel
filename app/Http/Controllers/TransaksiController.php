@@ -56,7 +56,8 @@ class TransaksiController extends Controller
 
             return response()->json([
                 'status' => "200",
-                'message' => "Transaksi berhasil ditambahkan"
+                'message' => "Transaksi berhasil ditambahkan",
+                'message2' => "Transaksimu akan di verifikasi"
             ]);
         } catch (\Throwable $th) {
             return response()->json([
