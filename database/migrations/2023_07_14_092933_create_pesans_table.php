@@ -17,10 +17,11 @@ return new class extends Migration
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('tanggal');
             $table->string('jenis');
-            $table->string('foto');
-            $table->string('foto2');
-            $table->string('foto3');
+            // $table->string('foto');
+            // $table->string('foto2');
+            // $table->string('foto3');
             $table->string('alamat');
+            $table->string('status');
             $table->timestamps();
         });
     }

@@ -14,26 +14,33 @@ class PesanController extends Controller
         return Pesan::all();
     }
 
+    public function indexSelesai()
+    {
+        $pesan = Pesan::where('status', 'selesai')->get();
+        return $pesan;
+    }
+
+    public function indexNunggu()
+    {
+        $pesan = Pesan::where('status', 'Menunggu jadwal Penjemputan')->get();
+        return $pesan;
+    }
+
+    public function indexAdmin()  {
+        $pesan = Pesan::where('status', 'Menunggu Verifikasi Admin')->get();
+        return $pesan;
+    }
+
     public function store(Request $request)
     {
         try {
-            $file = $request->file('foto');
-            $filename1 = time() . '-' . $file->getClientOriginalName();
-            $request->foto->move(public_path('storage'), $filename1);
-            $file = $request->file('foto2');
-            $filename2 = time() . '-' . $file->getClientOriginalName();
-            $request->foto2->move(public_path('storage'), $filename2);
-            $file = $request->file('foto3');
-            $filename3 = time() . '-' . $file->getClientOriginalName();
-            $request->foto3->move(public_path('storage'), $filename3);
+         // $request->foto3->move(public_path('storage'), $filename3);
             Pesan::create([
                 'users_id' => $request->users_id,
                 'tanggal' => $request->tanggal,
                 'alamat' => $request->alamat,
-                'foto' => $filename1,
-                'foto2' => $filename2,
-                'foto3' => $filename3,
-                'jenis' => $request->jenis
+                'jenis' => $request->jenis,
+                'status' => 'Menunggu verifikasi Admin'
             ]);
 
 
@@ -61,6 +68,55 @@ class PesanController extends Controller
 
             'pesan' => $pesan
         ]);
+    }
+
+    public function selesai($id) {
+        try {
+            $pesan = Pesan::find($id);
+            if (!$pesan) {
+                return response()->json([
+                    'status' => '404',
+                    'message' => 'Pesanan tidak ditemukan'
+                ]);
+            }
+
+            $pesan->status = 'Selesai';
+            $pesan->save();
+
+            return response()->json([
+                'status' => '200',
+                'message' => 'Transaksi telah selesai'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "Something went really wrong"
+            ]);
+        }
+    }
+    
+
+    public function nunggu($id) {
+        try {
+            $pesan = Pesan::find($id);
+            if (!$pesan) {
+                return response()->json([
+                    'status' => '404',
+                    'message' => 'Pesanan tidak ditemukan'
+                ]);
+            }
+
+            $pesan->status = 'Selesai';
+            $pesan->save();
+
+            return response()->json([
+                'status' => '200',
+                'message' => 'Menunggu jadwal Penjemputan'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "Something went really wrong"
+            ]);
+        }
     }
 
     public function update(Request $request, $id)
@@ -118,11 +174,11 @@ class PesanController extends Controller
         }
 
         //hapus storage
-        $storage = Storage::disk('public');
+        // $storage = Storage::disk('public');
 
-        //hapus gambar
-        if ($storage->exists($pesan->foto))
-            $storage->delete($pesan->foto, $pesan->foto2, $pesan->foto3);
+        // //hapus gambar
+        // if ($storage->exists($pesan->foto))
+        //     $storage->delete($pesan->foto, $pesan->foto2, $pesan->foto3);
            
         //delete pesan
         $pesan->delete();

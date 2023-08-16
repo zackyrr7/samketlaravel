@@ -69,10 +69,15 @@ Route::post('/transaksi/selesai/{id}', [TransaksiController::class, 'selesai']);
 
 //pesan
 Route::get('/pesan', [PesanController::class, 'index']);
+Route::get('/pesan/selesai', [PesanController::class, 'indexSelesai']);
+Route::get('/pesan/nunggu', [PesanController::class, 'indexNunggu']);
+Route::get('/pesan/admin', [PesanController::class, 'indexAdmin']);
 Route::get('/pesan/{id}', [PesanController::class, 'show']);
 Route::post('/pesan/delete/{id}', [PesanController::class, 'destroy']);
 Route::post('/pesan/update/{id}', [PesanController::class, 'update']);
 Route::post('/pesan', [PesanController::class, 'store']);
+Route::post('/pesan/selesai/{id}', [PesanController::class, 'selesai']);
+Route::post('/pesan/nunggu/{id}', [PesanController::class, 'nunggu']);
 
 
 Route::get('/tabungan', [TabunganController::class, 'index']);

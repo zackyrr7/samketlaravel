@@ -12,11 +12,12 @@ class pesan extends Model
         
         'users_id',
         'tanggal',
-        'foto',
-        'foto2',
-        'foto3',
+        // 'foto',
+        // 'foto2',
+        // 'foto3',
         'jenis',
-        'alamat'
+        'alamat',
+        'status'
 
     ];
 
