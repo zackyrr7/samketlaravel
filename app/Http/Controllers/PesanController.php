@@ -26,15 +26,38 @@ class PesanController extends Controller
         return $pesan;
     }
 
-    public function indexAdmin()  {
+    public function indexAdmin()
+    {
         $pesan = Pesan::where('status', 'Menunggu Verifikasi Admin')->get();
         return $pesan;
     }
 
+    public function indexSelesaiUser($id)
+    {
+        $pesan = Pesan::where('users_id', $id)->where('status', 'selesai')->get();
+
+        return $pesan;
+    }
+    public function indexNungguUser($id)
+    {
+        $pesan = Pesan::where('users_id', $id)->where('status', 'Menunggu jadwal Penjemputan')->get();
+
+        return $pesan;
+    }
+
+    public function indexAdminUser($id)
+    {
+        $pesan = Pesan::where('users_id', $id)->where('status', 'Menunggu Verifikasi Admin')->get();
+
+        return $pesan;
+    }
+
+
+
     public function store(Request $request)
     {
         try {
-         // $request->foto3->move(public_path('storage'), $filename3);
+            // $request->foto3->move(public_path('storage'), $filename3);
             Pesan::create([
                 'users_id' => $request->users_id,
                 'tanggal' => $request->tanggal,
@@ -70,7 +93,8 @@ class PesanController extends Controller
         ]);
     }
 
-    public function selesai($id) {
+    public function selesai($id)
+    {
         try {
             $pesan = Pesan::find($id);
             if (!$pesan) {
@@ -93,9 +117,10 @@ class PesanController extends Controller
             ]);
         }
     }
-    
 
-    public function nunggu($id) {
+
+    public function nunggu($id)
+    {
         try {
             $pesan = Pesan::find($id);
             if (!$pesan) {
@@ -105,7 +130,7 @@ class PesanController extends Controller
                 ]);
             }
 
-            $pesan->status = 'Selesai';
+            $pesan->status = 'Menunggu jadwal Penjemputan';
             $pesan->save();
 
             return response()->json([
@@ -179,7 +204,7 @@ class PesanController extends Controller
         // //hapus gambar
         // if ($storage->exists($pesan->foto))
         //     $storage->delete($pesan->foto, $pesan->foto2, $pesan->foto3);
-           
+
         //delete pesan
         $pesan->delete();
 
@@ -187,6 +212,4 @@ class PesanController extends Controller
             'message' => "Pesan berhasil di hapus"
         ]);
     }
-
-    
 }

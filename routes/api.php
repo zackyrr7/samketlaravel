@@ -59,10 +59,13 @@ Route::post('/jenis-transaksi', [JenisTransaksiController::class, 'store']);
 
 //transaksi
 Route::get('/transaksi', [TransaksiController::class, 'index']);
+Route::get('/transaksi/verif', [TransaksiController::class, 'indexVerif']);
+Route::get('/transaksi/selesai', [TransaksiController::class, 'indexSelesai']);
 Route::get('/transaksi/{id}', [TransaksiController::class, 'show']);
 Route::get('/transaksi/user/{id}', [TransaksiController::class, 'indexuser']);
 Route::post('/transaksi/delete/{id}', [TransaksiController::class, 'destroy']);
 Route::post('/transaksi/update/{id}', [TransaksiController::class, 'update']);
+Route::post('/transaksi/emas/{id}', [TransaksiController::class, 'emas']);
 Route::post('/transaksi', [TransaksiController::class, 'store']);
 Route::post('/transaksi/selesai/{id}', [TransaksiController::class, 'selesai']);
 
@@ -70,6 +73,9 @@ Route::post('/transaksi/selesai/{id}', [TransaksiController::class, 'selesai']);
 //pesan
 Route::get('/pesan', [PesanController::class, 'index']);
 Route::get('/pesan/selesai', [PesanController::class, 'indexSelesai']);
+Route::get('/pesan/selesai/{id}', [PesanController::class, 'indexSelesaiUser']);
+Route::get('/pesan/nunggu/{id}', [PesanController::class, 'indexNungguUser']);
+Route::get('/pesan/admin/{id}', [PesanController::class, 'indexAdminUser']);
 Route::get('/pesan/nunggu', [PesanController::class, 'indexNunggu']);
 Route::get('/pesan/admin', [PesanController::class, 'indexAdmin']);
 Route::get('/pesan/{id}', [PesanController::class, 'show']);

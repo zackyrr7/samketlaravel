@@ -14,6 +14,16 @@ class TransaksiController extends Controller
     {
         return Transaksi::all();
     }
+    public function indexVerif()
+    {
+        $transaksi = Transaksi::where('status', 'sedang diverifikasi')->get();
+        return $transaksi;
+    }
+    public function indexSelesai()
+    {
+        $transaksi = Transaksi::where('status', 'Selesai')->get();
+        return $transaksi;
+    }
 
 
     public function store(Request $request)
@@ -45,7 +55,7 @@ class TransaksiController extends Controller
                 $transaksi->delete();
                 return response()->json([
                     'total_transaksi' => $totaltransaksi,
-                    'total_tabungan' =>$totaltabungan,
+                    'total_tabungan' => $totaltabungan,
                     'status' => "201",
                     'message' => "Transaksi gagal",
                     'message2' => "Saldo tidak cukup"
@@ -96,15 +106,12 @@ class TransaksiController extends Controller
     {
         try {
             $user = User::find($id);
-              
-            //     $transaksi = Transaksi::where('users_id', $id)->get();
-            //    $transaksi = Transaksi::with('jenistransaksi')->get()->jenistransaksi->nama;
+
+
             $transaksi = Transaksi::with('jenistransaksi')->where('users_id', $id)->get();
-              
-            //    $transaksi = Transaksi::with('jenis_transaksis')->whereRelation('jenis_transaksis', $id)->get();
 
 
-             return $transaksi;
+            return $transaksi;
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 201,
@@ -125,11 +132,40 @@ class TransaksiController extends Controller
             }
             $transaksi->jenis_transaksis_id = $request->jenis_transaksis_id;
             $transaksi->total = $request->total;
-            $transaksi->tanggal = Carbon::now();
+
             $transaksi->nomor = $request->nomor;
             $transaksi->jenis = $request->jenis;
             $transaksi->status = 'sedang diverifikasi';
             $transaksi->users_id = $request->users_id;
+            $transaksi->save();
+
+            return response()->json([
+                'status' => '200',
+                'message' => 'Transaksi berhasil di Update'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "Something went really wrong"
+            ]);
+        }
+    }
+
+    public function emas(Request $request, $id)
+    {
+        try {
+            $transaksi = Transaksi::find($id);
+            if (!$transaksi) {
+                return response()->json([
+                    'status' => '404',
+                    'message' => 'transaksi tidak ditemukan'
+                ]);
+            }
+
+            $transaksi->total = $request->total;
+
+
+            $transaksi->status = 'Selesai';
+
             $transaksi->save();
 
             return response()->json([
