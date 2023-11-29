@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\pesan;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -58,19 +59,61 @@ class PesanController extends Controller
     {
         try {
             // $request->foto3->move(public_path('storage'), $filename3);
-            Pesan::create([
+            $pesan = Pesan::create([
                 'users_id' => $request->users_id,
                 'tanggal' => $request->tanggal,
                 'alamat' => $request->alamat,
                 'jenis' => $request->jenis,
                 'status' => 'Menunggu verifikasi Admin'
+
+                
+
+
+
             ]);
+
+            $user = User::find($pesan->users_id)->first();
+            $nama = $user->name;
+            $nomor = $user->no_hp;
+            
+            
+            
+
+            $token  = 'Yv!9GI2jH2y4f-r!r_Ha';
+            $target = '6281347771171';
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.fonnte.com/send',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array(
+                    'target' => $target,
+                    "message" => "Pesanan \ntanggal: $pesan->tanggal \nalamat: $pesan->alamat \njenis: $pesan->jenis \nPemesan Nama: $nama, \nNomor Hp: $nomor",
+                    'delay' => '2-5',
+                    'countryCode' => '62', //optional
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: $token" //change TOKEN to your actual token
+                ),
+            ));
+
+            $responses = curl_exec($curl);
+
+            curl_close($curl);
+            // echo $responses;
 
 
             //Json Response
             return response()->json([
                 'status' => "200",
                 'message' => "Pesanan berhasil ditambahkan",
+                'responses' => $responses
             ]);
         } catch (\Exception $e) {
             return response()->json([

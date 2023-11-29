@@ -41,7 +41,7 @@ class AuthController extends Controller
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        $input['role'] = 'user';
+        $input['role'] = 'Perlu Verifikasi';
         $user = User::create($input);
 
 
@@ -49,6 +49,7 @@ class AuthController extends Controller
         $succes['token'] = $user->createToken('auth_token')->plainTextToken;
         $succes['name'] = $user->name;
         $succes['id'] = $user->id;
+        $succes['role'] = $user->role;
 
         $tabungan  = new Tabungan();
 
@@ -119,6 +120,34 @@ class AuthController extends Controller
                 'succes' => False,
                 'message' => 'Email atau Password salah',
                 'data' => null
+            ]);
+        }
+    }
+
+    public function verifikasi(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+
+            return response()->json([
+                'succes' => False,
+                'message' => 'User tidak ada',
+                'data' => null
+            ]);
+
+            
+        } else {
+            $user->role = "user";
+            $user->save();
+            $succes['token'] = $user->createToken('auth_token')->plainTextToken;
+            $succes['name'] = $user->name;
+            $succes['id'] = $user->id;
+
+            return response()->json([
+                'succes' => true,
+                'message' => 'Sukses login',
+                'role' => $user->role,
+                'data' => $succes
             ]);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisTransaksi;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\User;
@@ -62,12 +63,48 @@ class TransaksiController extends Controller
                 ]);
             }
 
+            $user = User::find($transaksi->users_id)->first();
+            $nama = $user->name;
+            $nomor = $user->no_hp;
+
+            $jenis = JenisTransaksi::find($transaksi->jenis_transaksis_id)->first();
+            $namaJenis = $jenis->nama;
+
+            $token  = 'Yv!9GI2jH2y4f-r!r_Ha';
+            $target = '6281347771171';
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.fonnte.com/send',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array(
+                    'target' => $target,
+                    "message" => "Transaksi \nJenis: $namaJenis \ntanggal: $transaksi->tanggal \ntotal: $transaksi->total \nnomor: $transaksi->nomor \njenis: $transaksi->jenis \nPemesan Nama: $nama, \nNomor Hp: $nomor",
+                    'delay' => '2-5',
+                    'countryCode' => '62', //optional
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: $token" //change TOKEN to your actual token
+                ),
+            ));
+
+            $responses = curl_exec($curl);
+
+            curl_close($curl);
+
 
 
             return response()->json([
                 'status' => "200",
                 'message' => "Transaksi berhasil ditambahkan",
                 'message2' => "Transaksimu akan di verifikasi"
+                
             ]);
         } catch (\Throwable $th) {
             return response()->json([
